@@ -16,11 +16,51 @@ class TTT {
     // Initialize a 3x3 tic-tac-toe grid
     Screen.initialize(3, 3);
     Screen.setGridlines(true);
+    this.updateScreen();
 
-    // Replace this with real commands
-    Screen.addCommand('t', 'test command (remove)', TTT.testCommand);
+    // call the commands available for the game
+    this.initializeCommands();
 
     Screen.render();
+  }
+
+  initializeCommands() {
+    Screen.addCommand('m', 'make a move', this.makeMove.bind(this));
+    Screen.addCommand('up', 'move up', this.cursor.up.bind(this.cursor));
+    Screen.addCommand('down', 'move down', this.cursor.down.bind(this.cursor));
+    Screen.addCommand('left', 'move left', this.cursor.left.bind(this.cursor));
+    Screen.addCommand('right', 'move right', this.cursor.right.bind(this.cursor));
+  }
+
+  updateScreen() {
+    for (let row = 0; row < this.grid.length; row++) {
+      for (let col = 0; col < this.grid.length; col++) {
+        Screen.setGrid(row, col, this.grid[row][col]);
+        Screen.setTextColor(row, col, 'green');
+      }
+    }
+    Screen.render();
+  }
+
+  // logic to actually play the game
+  makeMove() {
+    // get current cursor position
+    const {row: currRow, col: currCol} = this.cursor;
+    // if it is empty, player can mark it
+    if (this.grid[currRow][currCol] === " ") {
+      this.grid[currRow][currCol] = this.playerTurn;
+
+      // check if game is won
+      let winner = TTT.checkWin(this.grid);
+      // if we found a winner, end the game
+      if (winner) {
+        TTT.endGame(winner);
+      } else {
+        // otherwise, switch the players
+        this.playerTurn = this.playerTurn === "O" ? "X" : "O";
+      }
+      this.updateScreen();
+    }
   }
 
   // Remove this
