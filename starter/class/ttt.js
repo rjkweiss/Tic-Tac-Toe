@@ -29,11 +29,34 @@ class TTT {
   }
 
   static checkWin(grid) {
+    // check horizontal and vertical wins
+    for (let idx = 0; idx < grid.length; idx++) {
+      if (grid[idx][0] === grid[idx][1] && grid[idx][1] === grid[idx][2] && grid[idx][0] !== " ") {
+        return grid[idx][0];
+      }
 
-    // Return 'X' if player X wins
-    // Return 'O' if player O wins
-    // Return 'T' if the game is a tie
+      // check cols
+      if (grid[0][idx] === grid[1][idx] && grid[1][idx] === grid[2][idx] && grid[0][idx] !== " ") {
+        return grid[0][idx];
+      }
+    }
+    // check diagonals (top left to bottom right)
+    if(grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2] && grid[0][0] !== " ") {
+      return grid[0][0];
+    }
+
+    // check diagonals (top right to bottom left)
+    if(grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0] && grid[0][2] !== " ") {
+      return grid[0][2];
+    }
+
+    // check for tie
+    if (grid.flat().every(cell => cell != " ")) {
+      return "T";
+    }
+
     // Return false if the game has not ended
+    return false;
 
   }
 
